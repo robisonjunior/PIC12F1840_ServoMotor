@@ -2,17 +2,24 @@
 
 
 
-Este projeto consiste em um firmware desenvolvido em C para o microcontrolador \*\*PIC12F1840\*\*, projetado para ler o sinal PWM de um canal do receptor de controle remoto de um drone GoHobby e convertê-lo/mapeá-lo em um sinal PWM padrão para controle de servomotores de 0 a 180 graus.
+Este projeto consiste em um firmware desenvolvido em C para o microcontrolador \*\*PIC12F1840\*\*, projetado para rotacionar o servo motor de 0 a 180 graus.
 
 
 
 \## 📌 Funcionalidades
 
-\* \*\*Leitura de Pulso de Entrada:\*\* Captura e decodifica a largura de pulso (geralmente entre 1ms e 2ms) vinda do receptor do drone.
+\* \*\*Leitura do botao de Entrada:\*\* 
 
-\* \*\*Mapeamento de Sinal:\*\* Converte a faixa de entrada dinamicamente para os tempos de ciclo de um servomotor mecânico padrão (0° a 180°).
+Inicialmente, quando liga o uC, o software gira para 0 graus o servo motor.
+
+Aguarda pressionar o botão para girar para 180 graus ou 0 graus.
+
 
 \* \*\*Saída PWM Estabilizada:\*\* Gera o sinal de saída na frequência correta de operação dos servos (50Hz).
+
+0 graus = pulso de 500us
+
+180 graus = pulso de 2500us
 
 
 
@@ -30,7 +37,7 @@ Este projeto consiste em um firmware desenvolvido em C para o microcontrolador \
 
 \* \*\*VCC:\*\* 5V (Garantir alimentação regulada para o PIC)
 
-\* \*\*GND:\*\* Terra comum (interligado com a bateria/ESC do drone e o servo)
+\* \*\*GND:\*\* Terra comum (interligado com pic e o servo)
 
 \* \*\*Entrada (Signal In):\*\* Pino RC\_IN \_\[Atualizar com o pino correto, ex: RA2]\_ <- Conectado ao receptor do Drone
 
