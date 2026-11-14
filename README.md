@@ -57,7 +57,7 @@ Aguarda pressionar o botão para girar para 180 graus ou 0 graus.
 
 2\. Abra o MPLAB X IDE.
 
-3\. Vá em \*\*File > Open Project\*\* e selecione a pasta `GoHobby\_Servo.X`.
+3\. Vá em \*\*File > Open Project\*\* e selecione a pasta `PIC12F1840_ServoMotor\PIC12F1840_ServoMotor.X`.
 
 4\. Certifique-se de ter o compilador XC8 instalado e configurado nas propriedades do projeto.
 
