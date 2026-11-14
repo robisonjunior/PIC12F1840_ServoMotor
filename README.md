@@ -1,41 +1,55 @@
-\# GoHobby Servo Converter (PIC12F1840)
+# Controle de Servomotor com PIC e MCC (Timer1 e Debounce)
 
+Firmware desenvolvido para microcontroladores PIC utilizando o **Microchip Code Configurator (MCC)**, implementando o controle preciso de um servomotor (como SG90 ou equivalentes) acionado por botão físico com debouncing por software e temporização via **Timer1** (50 Hz / 20 ms).
 
+---
 
-Este projeto consiste em um firmware desenvolvido em C para o microcontrolador \*\*PIC12F1840\*\*, projetado para rotacionar o servo motor de 0 a 180 graus.
+## 📋 Funcionalidades
 
+- **Geração de PWM por Software/Timer:** Utiliza o Timer1 configurado para disparar a cada 20 ms (50 Hz), controlando os pulsos em nível alto no pino **RA2**.
+- **Alternância de Posições:** Um botão conectado ao pino **RA4** permite alternar entre duas posições pré-definidas (0° e 180°).
+- **Debounce por Software:** Filtro integrado para evitar leituras falsas causadas pelo ruído mecânico do botão.
+- **Configuração via MCC:** Gerado utilizando as bibliotecas de sistema do ecossistema MPLAB X / MCC.
 
+---
 
-\## 📌 Funcionalidades
+## 🛠️ Especificações Técnicas e Pinos
 
-\* \*\*Leitura do botao de Entrada:\*\* 
+| Parâmetro / Periférico | Descrição / Conexão |
+| :--- | :--- |
+| **Clock do Sistema** | 16 MHz |
+| **Pino de Saída (Servo)** | `RA2` (Gera o pulso de controle PWM) |
+| **Pino de Entrada (Botão)** | `RA4` (Com resistor *Pull-Up* externo de 10k: Pressionado = `LOW` / `0`) |
+| **Base de Tempo** | Timer1 (Período de interrupção de 20 ms) |
+| **Posição 0°** | Pulso de ~550 µs |
+| **Posição 180°** | Pulso de ~2500 µs |
 
-Inicialmente, quando liga o uC, o software gira para 0 graus o servo motor.
+---
 
-Aguarda pressionar o botão para girar para 180 graus ou 0 graus.
+## ⚙️ Lógica de Funcionamento
 
+1. **Inicialização (`main`):**
+   - O sistema inicializa os osciladores e periféricos através de `SYSTEM_Initialize()`.
+   - O pino `RA4` é configurado explicitamente como entrada digital.
+   - O *callback* do Timer1 é registrado (`Servo_Pulse_Handler`) e a contagem de 50 Hz é iniciada.
 
-\* \*\*Saída PWM Estabilizada:\*\* Gera o sinal de saída na frequência correta de operação dos servos (50Hz).
+2. **Geração de Pulsos (`Servo_Pulse_Handler`):**
+   - A cada estouro do Timer1 (20 ms), o pino `RA2` vai para nível alto (`High`).
+   - Dependendo da variável global `posicao_servo` (`0` ou `1`), o firmware aguarda o tempo correspondente (`__delay_us`) e retorna o pino para nível baixo (`Low`).
 
-0 graus = pulso de 500us
+3. **Leitura do Botão (`while(1)`):**
+   - O loop principal monitora continuamente o estado do pino `RA4`.
+   - Ao detectar o acionamento (`LOW`), aguarda 40 ms para estabilização (*debounce*), inverte o estado da variável `posicao_servo` e trava a execução até que o botão seja solto.
 
-180 graus = pulso de 2500us
+---
 
+## 📁 Estrutura do Projeto
 
-
-\## 🛠️ Tecnologias e Ferramentas
-
-\* \*\*Ambiente de Desenvolvimento:\*\* MPLAB X IDE
-
-\* \*\*Compilador:\*\* Microchip XC8
-
-\* \*\*Microcontrolador:\*\* Microchip PIC12F1840
-
-
-
-\## 🔌 Conexões do Circuito (Pinagem)
-
-\* \*\*VCC:\*\* 5V (Garantir alimentação regulada para o PIC)
+```text
+├── mcc_generated_files/    # Arquivos gerados pelo Microchip Code Configurator (System, Pin Manager, Timer1)
+├── main.c                  # Código principal da aplicação e rotina de interrupção do servo
+└── README.md               # Documentação do projeto
+ para o PIC)
 
 \* \*\*GND:\*\* Terra comum (interligado com pic e o servo)
 
